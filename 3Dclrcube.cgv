@@ -1,0 +1,93 @@
+#include "stdafx.h"
+#include<gl/glut.h>
+#include<stdio.h>
+#include<math.h>
+typedef GLint vertex[3];
+vertex v[8]={{-1,-1,-1},{-1,1,-1},{1,-1,-1},{1,1,-1},{-1,-1,1},{-1,1,1},{1,-1,1},{1,1,1}};
+float col[][3]={{0,0,0},{0,1,0},{1,0,0},{1,1,0},{0,0,1},{0,1,1},{1,0,1},{1,1,1}};
+int axis=1;
+float angle[3]={1,1,1};
+void init()
+{
+	glClearColor(0,0,0,1);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(-2,2,-2,2,-2,2);
+	glMatrixMode(GL_MODELVIEW);
+	glEnable(GL_DEPTH_TEST);
+	
+}
+void square(int a,int b,int c, int d)
+{
+	
+	glBegin(GL_QUADS);
+	glColor3fv(col[a]);
+	glVertex3iv(v[a]);
+	glColor3fv(col[b]);
+	glVertex3iv(v[b]);
+	glColor3fv(col[c]);
+	glVertex3iv(v[c]);
+	glColor3fv(col[d]);
+	glVertex3iv(v[d]);
+	glEnd();
+}
+void cube()
+{
+	square(0,2,3,1);
+	square(4,6,7,5);
+	square(5,7,3,1);
+	square(4,6,2,0);
+	square(4,0,1,5);
+	square(6,2,3,7);
+}
+void display()
+{
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
+	glRotatef(angle[2],0,1,0);
+	glRotatef(angle[1],0,0,1);
+	glRotatef(angle[0],1,0,0);
+	cube();
+	glFlush();
+	glutSwapBuffers();
+}
+void mymove(int btn,int st,int x,int y)
+{
+	if(st==GLUT_DOWN && btn==GLUT_LEFT_BUTTON)
+	{
+		axis=0;
+	}
+
+	if(st==GLUT_DOWN && btn==GLUT_RIGHT_BUTTON)
+	{
+		axis=2;
+	}
+	if(st==GLUT_DOWN && btn==GLUT_MIDDLE_BUTTON)
+	{
+		axis=1;
+	}
+	glutPostRedisplay();
+}
+
+void spin()
+	{
+		if(angle[axis]<360)
+		{
+			angle[axis]+=0.1;
+		}
+		else
+			angle[axis]=0;
+	glutPostRedisplay();	
+	}
+
+
+void main()
+{
+	glutInitDisplayMode(GLUT_DOUBLE|GLUT_DEPTH);
+	glutInitWindowSize(600,600);
+	glutCreateWindow("3D-color-cube");
+	init();
+	glutIdleFunc(spin);
+	glutMouseFunc(mymove);
+	glutDisplayFunc(display);
+	glutMainLoop();
