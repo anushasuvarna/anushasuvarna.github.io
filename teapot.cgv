@@ -1,0 +1,123 @@
+#include<glut.h>
+void init()
+{
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(-6, 6, -6, 6, -15, 15);
+	glMatrixMode(GL_MODELVIEW);
+	glEnable(GL_DEPTH_TEST);
+	glShadeModel(GL_SMOOTH);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_NORMALIZE);
+}
+void wall()
+{
+	// The below code is used to create the Floor
+	glPushMatrix();
+	glTranslatef(1.5, -1.5, 1.5);
+	glScalef(3, 0.05, 3);
+	glutSolidCube(2);
+	glPopMatrix();
+	
+	// The below code is used to create the wall-1
+	glPushMatrix();
+	glTranslatef(4.5, 1.5, 1.5);
+	glScalef(0.05, 3, 3);
+	glutSolidCube(2);
+	glPopMatrix();
+
+	// The below code is used to create the wall-2
+	glPushMatrix();
+	glTranslatef(-1.5, 1.5, 1.5);
+	glScalef(0.05, 3, 3);
+	glutSolidCube(2);
+	glPopMatrix();
+
+	// The below code is used to create the wall-3
+	glPushMatrix();
+	glTranslatef(1.5, 1.5, -1.5);
+	glScalef(3, 3, 0.05);
+	glutSolidCube(2);
+	glPopMatrix();
+
+
+}
+void table()
+{
+	// The below code is used create the top face of the table
+	glPushMatrix();
+	glTranslatef(1, -0.7, 1);
+	glScalef(0.7, 0.06, 0.7);
+	glutSolidCube(3);
+	glPopMatrix();
+	// The Front-Left leg  
+	glPushMatrix();
+	glTranslatef(0.15, -1.1, 1.85);
+	glScalef(0.1, 0.5 / 2, 0.1);
+	glutSolidCube(3);
+	glPopMatrix();
+	// The Front-Right leg  
+
+	glPushMatrix();
+	glTranslatef(1.85, -1.1, 1.85);
+	glScalef(0.1, 0.5 / 2, 0.1);
+	glutSolidCube(3);
+	glPopMatrix();
+	// The Back-Right leg  
+
+	glPushMatrix();
+	glTranslatef(1.85, -1.1, 0.15);
+	glScalef(0.1, 0.5 / 2, 0.1);
+	glutSolidCube(3);
+	glPopMatrix();
+
+	// The back-Left leg  
+	glPushMatrix();
+	glTranslatef(0.15, -1.1, 0.15);
+	glScalef(0.1, 0.5 / 2, 0.1);
+	glutSolidCube(3);
+	glPopMatrix();
+}
+void tea()
+{
+	glPushMatrix();
+	glTranslatef(1, -0.4, 1);
+	glRotatef(45, 0, 1, 0);
+	glutSolidTeapot(0.3);
+	glPopMatrix();
+}
+
+
+void display(void)
+{
+	float amb[] = { 0.8, 0.7, 0.3 };
+	float spec[] = { 0.6, 0.9, 0.7 };
+	float pos[] = { 0.5, 1.9, 2 };
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
+
+	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, amb);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, spec);
+	glMaterialf(GL_FRONT, GL_SHININESS, 50.0);
+	
+	glLightfv(GL_LIGHT0, GL_POSITION, pos);
+	gluLookAt(0.7, 0.5, 1.8, 0, 0, 0, 0, 1, 0);
+	wall();
+	table();
+	tea();
+	glFlush();
+}
+
+
+int main()
+{
+	glutInitDisplayMode(GLUT_SINGLE | GLUT_DEPTH);
+	glutInitWindowSize(600, 600);
+	glutCreateWindow("teapot");
+	init();
+	glutDisplayFunc(display);
+	glutMainLoop();
+	return 0;
+}
